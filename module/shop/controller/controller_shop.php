@@ -1,5 +1,5 @@
 <?php
-$path = $_SERVER['DOCUMENT_ROOT'] . '/cars/';
+$path = $_SERVER['DOCUMENT_ROOT'] . '/cars/FW_PHP_OO_MVC_JQuery/';
 include($path . "module/shop/model/DAOShop.php");
 switch ($_GET['op']) {
     case 'search';

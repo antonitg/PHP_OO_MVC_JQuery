@@ -1,10 +1,19 @@
 function load_content(url) {
+    var showperpage = 10;
     $.ajax({
         type: 'GET',
         dataType: 'JSON',
         url: 'module/shop/controller/controller_shop.php?op=filter&' + url,
     }).done(function (jsonSearch) {
-        // console.log(jsonSearch); //Debug
+        if (Object.keys(jsonSearch).length / showperpage - Math.floor(Object.keys(jsonSearch).length / showperpage) == 0) {
+            varnumfinal = Object.keys(jsonSearch).length / showperpage;
+        } else {
+            varnumfinal = (Math.floor(Object.keys(jsonSearch).length / showperpage)) + 1;
+        }
+        for (let i = 0; i < varnumfinal; i++) {
+            console.log(varnumfinal);
+
+        }
         $('#result-content').empty();
         if (Object.keys(jsonSearch).length == 1) {
             details(jsonSearch[0]["registration"]);
@@ -60,65 +69,28 @@ function details(id) {
         dataType: 'JSON',
         url: 'module/shop/controller/controller_shop.php?op=details&id=' + id,
     }).done(function (jsonCar) {
+        console.log(jsonCar);
         $('#result-content').empty();
         $('<table></table>').attr({ 'id': 'car_details_table', 'class': 'table table-hover' }).appendTo('#result-content');
         $('#car_details_table').html(function () {
             for (row in jsonCar) {
-                $('<tr></tr>').attr({ 'id': row }).appendTo('#car_details_table');
-                $('<td></td>').attr({ 'id': `${row}index` }).append(document.createTextNode(row)).appendTo('#' + row);
-                $('<td></td>').attr({ 'id': `${row}content` }).append(document.createTextNode(jsonCar[row])).appendTo('#' + row);
+                if (row == "srcimg") {
+                    $('<tr></tr>').attr({ 'id': row }).appendTo('#car_details_table');
+                    $('<td></td>').attr({ 'id': `${row}index`, 'class': 'text-center' }).appendTo('#' + row);
+                    $('<img>').attr({ 'id': `${row}content`, 'class': 'text-center', 'src': jsonCar[row] }).appendTo(`#${row}index`);
+                } else {
+                    $('<tr></tr>').attr({ 'id': row }).appendTo('#car_details_table');
+                    $('<td></td>').attr({ 'id': `${row}index` }).append(document.createTextNode(row)).appendTo('#' + row);
+                    $('<td></td>').attr({ 'id': `${row}content` }).append(document.createTextNode(jsonCar[row])).appendTo('#' + row);
+                }
             }
-
         });
     }).fail(function (jqXHR, textStatus, errorThrown) {
         if (console && console.log) {
             console.log("Error name/code: " + textStatus);
         }
-        //window.location.href = 'index.php?page=error503';
     });
-
-
 }
-// var markers = [];
-
-// function initialize() {
-
-//     var beaches = [
-//         ['Bondi Beach', -33.890542, 151.274856, 1],
-//         ['Coogee Beach', -33.923036, 151.259052, 1],
-//         ['Cronulla Beach', -34.028249, 151.157507, 2],
-//         ['Manly Beach', -33.800101, 151.287478, 2],
-//         ['Maroubra Beach', -33.950198, 151.259302, 2]
-//     ];
-
-//     // var map = new google.maps.Map(document.getElementById('map'), {
-//     //     zoom: 10,
-//     //     center: new google.maps.LatLng(-33.88, 151.28),
-//     //     mapTypeId: google.maps.MapTypeId.ROADMAP
-//     // });
-
-//     // var infowindow = new google.maps.InfoWindow();
-
-//     for (var i = 0; i < beaches.length; i++) {
-
-//         var newMarker = new google.maps.Marker({
-//             position: new google.maps.LatLng(beaches[i][1], beaches[i][2]),
-//             map: map,
-//             title: beaches[i][0]
-//         });
-
-//         google.maps.event.addListener(newMarker, 'click', (function (newMarker, i) {
-//             return function () {
-//                 infowindow.setContent(beaches[i][0]);
-//                 infowindow.open(map, newMarker);
-//             }
-//         })(newMarker, i));
-
-//         markers.push(newMarker);
-//     }
-// }
-
-// initialize();
 function initMap() {
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 10,
@@ -149,7 +121,7 @@ function initMap() {
                     });
                     google.maps.event.addListener(newMarker, 'click', (function (newMarker, i) {
                         return function () {
-                            infowindow.setContent("<b>"+jsonSearch[i]["brand"]+" "+jsonSearch[i]["model"]+"</b><br>"+jsonSearch[i]["carcondition"]+" "+jsonSearch[i]["price"]+"€"+"<br><img class='mapsimage' id='"+jsonSearch[i]["registration"]+"' style='height:110px;' src='"+jsonSearch[i]["src"]+"' alt='image in infowindow'>");
+                            infowindow.setContent("<b>" + jsonSearch[i]["brand"] + " " + jsonSearch[i]["model"] + "</b><br>" + jsonSearch[i]["carcondition"] + " " + jsonSearch[i]["price"] + "€" + "<br><img class='mapsimage' id='" + jsonSearch[i]["registration"] + "' style='height:110px;' src='" + jsonSearch[i]["src"] + "' alt='image in infowindow'>");
                             infowindow.open(map, newMarker);
                         }
                     })(newMarker, i));
@@ -185,14 +157,13 @@ function getSearchValues() {
 }
 $(document).ready(function () {
     load_filters();
-    // getmap();
-    if(document.getElementById("map") != null){
+    if (document.getElementById("map") != null) {
         var script = document.createElement('script');
-        script.src = "https://maps.googleapis.com/maps/api/js?key="+MAPAPI+"&callback=initMap";
+        script.src = "https://maps.googleapis.com/maps/api/js?key=" + MAPAPI + "&callback=initMap";
         script.async;
         script.defer;
         document.getElementsByTagName('script')[0].parentNode.appendChild(script);
-      }
+    }
     switch (localStorage.getItem("op")) {
         case null:
             getSearchValues();

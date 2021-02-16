@@ -60,7 +60,7 @@ class DAOShop
         return $resArray;
     }
 
-    function filter($keyword, $brand, $condition, $minprice, $maxprice)
+    function filter($keyword, $brand, $condition, $minprice, $maxprice,$showing,$page)
     {
         if ($minprice == "null") {
             $minprice = 100;
@@ -68,8 +68,14 @@ class DAOShop
         if ($maxprice == "null") {
             $maxprice = 99999999;
         }
-        $sql = "SELECT * FROM `cars` WHERE `brand` LIKE '{$brand}' AND `carcondition` LIKE '{$condition}' AND `category` LIKE '%{$keyword}%' AND `price` BETWEEN '{$minprice}' AND '{$maxprice}'";
 
+        $from = $showing*($page-1);
+        
+        $sql = "SELECT * FROM `cars`
+        WHERE `brand` LIKE '{$brand}' AND `carcondition` LIKE '{$condition}' AND `category` LIKE '%{$keyword}%' AND `price` BETWEEN '{$minprice}' AND '{$maxprice}' 
+        LIMIT {$from},{$showing}";
+        // $sql = "SELECT * FROM `cars`
+        // WHERE `brand` LIKE '{$brand}' AND `carcondition` LIKE '{$condition}' AND `category` LIKE '%{$keyword}%' AND `price` BETWEEN '{$minprice}' AND '{$maxprice}'";
         $conexion = connect::con();
         $res = mysqli_query($conexion, $sql);
         connect::close($conexion);
@@ -79,6 +85,33 @@ class DAOShop
 
         return $resArray;
     }
+    function pagination($keyword, $brand, $condition, $minprice, $maxprice,$showing,$page)
+    {
+        if ($minprice == "null") {
+            $minprice = 100;
+        }
+        if ($maxprice == "null") {
+            $maxprice = 99999999;
+        }
+
+        // $from = $showing*($page-1);
+        
+        // $sql = "SELECT * FROM `cars`
+        // WHERE `brand` LIKE '{$brand}' AND `carcondition` LIKE '{$condition}' AND `category` LIKE '%{$keyword}%' AND `price` BETWEEN '{$minprice}' AND '{$maxprice}' 
+        // LIMIT {$from},{$showing}";
+        $sql = "SELECT * FROM `cars`
+        WHERE `brand` LIKE '{$brand}' AND `carcondition` LIKE '{$condition}' AND `category` LIKE '%{$keyword}%' AND `price` BETWEEN '{$minprice}' AND '{$maxprice}'";
+        $conexion = connect::con();
+        $res = mysqli_query($conexion, $sql);
+        connect::close($conexion);
+        while ($row = $res->fetch_array(MYSQLI_ASSOC)) {
+            $resArray[] = $row;
+        }
+
+        return $resArray;
+    }
+        
+    
     function search_brand($keyword)
     {
         $sql = "SELECT * FROM `cars` WHERE `brand` LIKE '{$keyword}'";

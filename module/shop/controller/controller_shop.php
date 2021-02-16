@@ -20,10 +20,28 @@ switch ($_GET['op']) {
             exit;
         }
         break;
+    case 'getpagination';
+        try {
+            $daoshop = new DAOShop();
+            $rdo = $daoshop->pagination($_GET['keyword'], $_GET['brand'], $_GET['condition'], $_GET['minprice'], $_GET['maxprice'], $_GET['showing'], $_GET['page']);
+        } catch (Exception $e) {
+            echo json_encode("no arriba al daouser");
+            exit;
+        }
+        if (!$rdo) {
+            //echo "<script>alert('Acaba en el segon try');</script>";
+            echo json_encode("entra al daouser pero acaba mal");
+            exit;
+        } else {
+            echo json_encode($rdo);
+            //echo json_encode("error");
+            exit;
+        }
+        break;
     case 'filter';
         try {
             $daoshop = new DAOShop();
-            $rdo = $daoshop->filter($_GET['keyword'], $_GET['brand'], $_GET['condition'], $_GET['minprice'], $_GET['maxprice']);
+            $rdo = $daoshop->filter($_GET['keyword'], $_GET['brand'], $_GET['condition'], $_GET['minprice'], $_GET['maxprice'], $_GET['showing'], $_GET['page']);
         } catch (Exception $e) {
             echo json_encode("no arriba al daouser");
             exit;
@@ -91,7 +109,7 @@ switch ($_GET['op']) {
             exit;
         }
         break;
-    case 'getmap'; 
+    case 'getmap';
         try {
             $daoshop = new DAOShop();
             $rdo = $daoshop->getmap($_GET['lat'], $_GET['lon']);

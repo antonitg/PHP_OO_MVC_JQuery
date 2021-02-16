@@ -1,19 +1,11 @@
 function load_content(url) {
-    var showperpage = 10;
+    $('.pagination').empty();
+    getPaginationValues();
     $.ajax({
         type: 'GET',
         dataType: 'JSON',
         url: 'module/shop/controller/controller_shop.php?op=filter&' + url,
     }).done(function (jsonSearch) {
-        if (Object.keys(jsonSearch).length / showperpage - Math.floor(Object.keys(jsonSearch).length / showperpage) == 0) {
-            varnumfinal = Object.keys(jsonSearch).length / showperpage;
-        } else {
-            varnumfinal = (Math.floor(Object.keys(jsonSearch).length / showperpage)) + 1;
-        }
-        for (let i = 0; i < varnumfinal; i++) {
-            console.log(varnumfinal);
-
-        }
         $('#result-content').empty();
         if (Object.keys(jsonSearch).length == 1) {
             details(jsonSearch[0]["registration"]);
@@ -40,9 +32,34 @@ function load_content(url) {
             no_result($("#shop-search").val());
         }
     });
-
 }
-// FALTA:  ALINIEAR EL PREU EN EL BOTO)
+function pagination(url) {
+    var showperpage = $("#num_pag_select").val();
+    $.ajax({
+        type: 'GET',
+        dataType: 'JSON',
+        url: 'module/shop/controller/controller_shop.php?op=getpagination&' + url,
+    }).done(function (jsonSearch) {
+        // console.log(jsonSearch);
+        if (Object.keys(jsonSearch).length / showperpage - Math.floor(Object.keys(jsonSearch).length / showperpage) == 0) {
+            varnumfinal = Object.keys(jsonSearch).length / showperpage;
+        } else {
+            varnumfinal = (Math.floor(Object.keys(jsonSearch).length / showperpage)) + 1;
+        }
+        load_pagination(varnumfinal);
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (console && console.log) {
+            console.log("Error name/code: " + textStatus);
+            no_result($("#shop-search").val());
+        }
+    });
+}
+function load_pagination(numpages) {
+    for (let i = 1; i < numpages + 1; i++) {
+        $("<li></li>").attr({ "class": "page-item", "id": "index" + i }).appendTo(".pagination");
+        $("<p></p>").attr({ "class": "page-link", "id": i }).append(document.createTextNode(i)).appendTo("#index" + i);
+    }
+}
 function no_result(keyword) {
     $('#result-content').empty();
     $('<p></p>').attr({ 'class': 'text-danger h3' }).append(document.createTextNode('No results found for ' + keyword)).appendTo('#result-content');
@@ -131,7 +148,6 @@ function initMap() {
                 if (console && console.log) {
                     console.log("Error name/code: " + textStatus);
                 }
-                //window.location.href = 'index.php?page=error503';
             });
         },
         () => {
@@ -139,20 +155,39 @@ function initMap() {
         }
     );
 }
-function getSearchValues() {
+function getPaginationValues() {
     var keyword = $("#shop-search").val();
     var brand = $("#brand_cat").val();
     var condition = $("#condition_cat").val();
     var maxprice = $("#max_price").val();
     var minprice = $("#min_price").val();
+    var showing = $("#num_pag_select").val();
+    var page = 1;
     if (maxprice == "") {
         maxprice = 99999999;
     }
     if (minprice == "") {
         minprice = 100;
     }
-
-    var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice;
+    // var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice;
+    var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice + "&showing=" + showing + "&page=" + page;
+    pagination(url);
+}
+function getSearchValues(page = 1) {
+    var keyword = $("#shop-search").val();
+    var brand = $("#brand_cat").val();
+    var condition = $("#condition_cat").val();
+    var maxprice = $("#max_price").val();
+    var minprice = $("#min_price").val();
+    var showing = $("#num_pag_select").val();
+    if (maxprice == "") {
+        maxprice = 99999999;
+    }
+    if (minprice == "") {
+        minprice = 100;
+    }
+    // var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice;
+    var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice + "&showing=" + showing + "&page=" + page;
     load_content(url);
 }
 $(document).ready(function () {
@@ -208,14 +243,20 @@ $(document).ready(function () {
     $('.fa-search').on('click', function () {
         getSearchValues();
     });
+    //Event Listener for the "Buy" button
     $('.btn-details').on('click', function () {
         details(this.getAttribute("id"));
     });
     $(document).on("click", ".btn-details", function () {
-        details($(this).attr('id')); // or var clickedBtnID = this.id
+        details($(this).attr('id')); 
     });
+    //Event Listener for the car in the map
     $(document).on("click", ".mapsimage", function () {
-        details($(this).attr('id')); // or var clickedBtnID = this.id
+        details($(this).attr('id')); 
+    });
+    //Event listener for the pagination 
+    $(document).on("click", ".page-link", function () {
+        getSearchValues($(this).attr('id')); // or var clickedBtnID = this.id
     });
 
 });

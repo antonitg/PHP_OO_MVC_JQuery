@@ -59,6 +59,13 @@ class DAOShop
         }
         return $resArray;
     }
+     
+    function addview($registration) {
+        $sql = "UPDATE cars SET views = views + 1 WHERE registration = '{$registration}'";
+        $conexion = connect::con();
+        mysqli_query($conexion, $sql);
+        connect::close($conexion);
+    }
 
     function filter($keyword, $brand, $condition, $minprice, $maxprice,$showing,$page)
     {
@@ -72,7 +79,8 @@ class DAOShop
         $from = $showing*($page-1);
         
         $sql = "SELECT * FROM `cars`
-        WHERE `brand` LIKE '{$brand}' AND `carcondition` LIKE '{$condition}' AND `category` LIKE '%{$keyword}%' AND `price` BETWEEN '{$minprice}' AND '{$maxprice}' 
+        WHERE `brand` LIKE '{$brand}' AND `carcondition` LIKE '{$condition}' AND `model` LIKE '%{$keyword}%' AND `price` BETWEEN '{$minprice}' AND '{$maxprice}' 
+        ORDER BY views desc
         LIMIT {$from},{$showing}";
         // $sql = "SELECT * FROM `cars`
         // WHERE `brand` LIKE '{$brand}' AND `carcondition` LIKE '{$condition}' AND `category` LIKE '%{$keyword}%' AND `price` BETWEEN '{$minprice}' AND '{$maxprice}'";
@@ -100,7 +108,7 @@ class DAOShop
         // WHERE `brand` LIKE '{$brand}' AND `carcondition` LIKE '{$condition}' AND `category` LIKE '%{$keyword}%' AND `price` BETWEEN '{$minprice}' AND '{$maxprice}' 
         // LIMIT {$from},{$showing}";
         $sql = "SELECT * FROM `cars`
-        WHERE `brand` LIKE '{$brand}' AND `carcondition` LIKE '{$condition}' AND `category` LIKE '%{$keyword}%' AND `price` BETWEEN '{$minprice}' AND '{$maxprice}'";
+        WHERE `brand` LIKE '{$brand}' AND `carcondition` LIKE '{$condition}' AND `model` LIKE '%{$keyword}%' AND `price` BETWEEN '{$minprice}' AND '{$maxprice}'";
         $conexion = connect::con();
         $res = mysqli_query($conexion, $sql);
         connect::close($conexion);

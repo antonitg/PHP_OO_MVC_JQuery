@@ -96,6 +96,7 @@ switch ($_GET['op']) {
     case 'details';
         try {
             $daoshop = new DAOShop();
+            $daoshop->addview($_GET['id']);
             $rdo = $daoshop->details($_GET['id']);
         } catch (Exception $e) {
             echo json_encode("no arriba al daouser");

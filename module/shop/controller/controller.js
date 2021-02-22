@@ -86,7 +86,8 @@ function details(id) {
         dataType: 'JSON',
         url: 'module/shop/controller/controller_shop.php?op=details&id=' + id,
     }).done(function (jsonCar) {
-        console.log(jsonCar);
+        // console.log(jsonCar); // Debug
+        $('.pagination').empty();
         $('#result-content').empty();
         $('<table></table>').attr({ 'id': 'car_details_table', 'class': 'table table-hover' }).appendTo('#result-content');
         $('#car_details_table').html(function () {
@@ -206,23 +207,27 @@ $(document).ready(function () {
         case "search":
             switch (localStorage.getItem("value")) {
                 case "KM0":
-                    var url = "keyword=%&brand=%&condition=New&minprice=100&maxprice=99999999";
+                    var url = "keyword=%&brand=%&condition=New&minprice=100&maxprice=99999999&showing=10&page=1";
                     load_content(url);
                     break;
                 case "Seat":
-                    var url = "keyword=%&brand=Seat&condition=%&minprice=100&maxprice=99999999";
+                    var url = "keyword=%&brand=Seat&condition=%&minprice=100&maxprice=99999999&showing=10&page=1";
                     load_content(url);
                     break;
                 case "Luxury":
-                    var url = "keyword=%&brand=%&condition=%&minprice=200000&maxprice=99999999";
+                    var url = "keyword=%&brand=%&condition=%&minprice=200000&maxprice=99999999&showing=10&page=1";
                     load_content(url);
                     break;
                 case "Preowned":
-                    var url = "keyword=%&brand=%&condition=Used&minprice=100&maxprice=99999999";
+                    var url = "keyword=%&brand=%&condition=Used&minprice=100&maxprice=99999999&showing=10&page=1";
                     load_content(url);
                     break;
                 case "BMW":
-                    var url = "keyword=%&brand=BMW&condition=%&minprice=100&maxprice=99999999";
+                    var url = "keyword=%&brand=BMW&condition=%&minprice=100&maxprice=99999999&showing=10&page=1";
+                    load_content(url);
+                    break;
+                case "global":
+                    var url = "keyword="+localStorage.getItem("keyword")+"&brand="+localStorage.getItem('brand')+"&condition="+localStorage.getItem('condition')+"&minprice=100&maxprice=99999999&showing=10&page=1";
                     load_content(url);
                     break;
                 default:

@@ -19,6 +19,7 @@
         <script src="external/owlcarousel/dist/owl.carousel.min.js"></script> 
         <script type="text/javascript" src="view/js/globalevents.js"></script>
         <script type="text/javascript" src="module/shop/controller/controller.js"></script>
+        <script type="text/javascript" src="module/search/controller/controller_search.js"></script>
         <script type="text/javascript" src="module/hello/view/hello.js"></script>
         <script type="text/javascript" src="model/credentials.js"></script>
 

@@ -1,5 +1,6 @@
 function load_content(url) {
     $('.pagination').empty();
+    $("#books_releated").empty();
     getPaginationValues();
     $.ajax({
         type: 'GET',
@@ -103,11 +104,78 @@ function details(id) {
                 }
             }
         });
+        $('<div></div>').attr({'id': 'books_releated' }).appendTo('#result-content');
+        $('<button></button>').attr({'id': 'showmore','class':'btn btn-info','style':'margin-left: 39%; margin-right: 39%;'}).append(document.createTextNode("More")).appendTo('#result-content');
+        load_api_books();
+
     }).fail(function (jqXHR, textStatus, errorThrown) {
         if (console && console.log) {
             console.log("Error name/code: " + textStatus);
         }
     });
+
+}
+function load_api_books(){
+    var offset = $("#books_releated")[0].childElementCount;
+    var limit = 3;
+
+    $.ajax({
+        type: 'GET',
+        dataType: 'JSON',
+        url: 'https://www.googleapis.com/books/v1/volumes?q=car&maxResults=40&orderBy=newest',
+    }).done(function (jsonCar) {
+        console.log(offset,limit);
+        console.log(jsonCar);
+
+        for (i = offset;i<offset+limit;i++) {
+            console.log(i);
+            try {
+                var foto = jsonCar.items[i].volumeInfo.imageLinks.thumbnail;
+            }
+              catch(err) {
+                var foto = "http://books.google.com/books/content?id=cr4IyD5l1NQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"; 
+            }
+        var title = jsonCar.items[i].volumeInfo.title;
+        var desc = jsonCar.items[i].volumeInfo.description;
+        var link = jsonCar.items[i].volumeInfo.previewLink;
+        var pags = jsonCar.items[i].volumeInfo.pageCount;
+        
+        $('<div></div>').attr({'class':'Card1','id':'book'+i}).appendTo("#books_releated");
+        $('<div></div>').attr({'class':'photo','style':'background-image:url("'+foto+'");'}).appendTo("#book"+i);
+        $('<ul></ul>').attr({'class':'details','id':'ulbook'+i}).appendTo("#book"+i);
+        $('<h4></h4>').append(document.createTextNode(title)).appendTo('#ulbook'+i);
+        $('<div></div>').attr({'class':'description','id':'description'+i}).appendTo('#book'+i);
+        $('<div></div>').attr({'class':'line','id':'line'+i}).appendTo('#description'+i);
+        $('<h1></h1>').attr({'class':'product_name'}).append(document.createTextNode(title)).appendTo('#line'+i);
+        $('<h1></h1>').attr({'class':'product_price'}).append(document.createTextNode(pags+" Pags")).appendTo('#line'+i);
+        $('<p></p>').attr({'class':'summary'}).append(document.createTextNode(desc)).appendTo('#description'+i);
+        $('<a></a>').attr({'href':link}).append(document.createTextNode("Read More")).appendTo('#description'+i);
+        }
+
+// 
+// {/* <div class="Card1">
+//   <div class="photo"></div>
+//   <ul class="details">
+//     <h4>Card List</h4>
+//   </ul>
+//   <div class="description">
+//     <div class="line">
+//       <h1 class="product_name">Card Title</h1>
+//       <h1 class="product_price">€10</h1>
+//     </div>
+//     <p class="summary">An country demesne message it. Bachelor domestic extended doubtful as concerns at. Morning prudent removal an letters by.</p>
+//     <a href="//s.codepen.io/ImagineAlex">Read More</a>
+//   </div>
+// </div> */}
+
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (console && console.log) {
+            console.log("Error name/code: " + textStatus);
+        }
+    });
+
+    
+
 }
 function initMap() {
     var map = new google.maps.Map(document.getElementById('map'), {
@@ -170,7 +238,6 @@ function getPaginationValues() {
     if (minprice == "") {
         minprice = 100;
     }
-    // var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice;
     var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice + "&showing=" + showing + "&page=" + page;
     pagination(url);
 }
@@ -262,6 +329,10 @@ $(document).ready(function () {
     //Event listener for the pagination 
     $(document).on("click", ".page-link", function () {
         getSearchValues($(this).attr('id')); // or var clickedBtnID = this.id
+    });
+    // Event listeber for show more releated books
+    $(document).on("click", "#showmore", function () {
+        load_api_books();
     });
 
 });

@@ -1,3 +1,4 @@
-/model/*
+/model/*.php
+/model/*.js
 *.txt
 *.log

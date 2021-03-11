@@ -107,13 +107,11 @@ function details(id) {
         $('<div></div>').attr({'id': 'books_releated' }).appendTo('#result-content');
         $('<button></button>').attr({'id': 'showmore','class':'btn btn-info','style':'margin-left: 39%; margin-right: 39%;'}).append(document.createTextNode("More")).appendTo('#result-content');
         load_api_books();
-
     }).fail(function (jqXHR, textStatus, errorThrown) {
         if (console && console.log) {
             console.log("Error name/code: " + textStatus);
         }
     });
-
 }
 function load_api_books(){
     var offset = $("#books_releated")[0].childElementCount;
@@ -139,7 +137,6 @@ function load_api_books(){
         var desc = jsonCar.items[i].volumeInfo.description;
         var link = jsonCar.items[i].volumeInfo.previewLink;
         var pags = jsonCar.items[i].volumeInfo.pageCount;
-        
         $('<div></div>').attr({'class':'Card1','id':'book'+i}).appendTo("#books_releated");
         $('<div></div>').attr({'class':'photo','style':'background-image:url("'+foto+'");'}).appendTo("#book"+i);
         $('<ul></ul>').attr({'class':'details','id':'ulbook'+i}).appendTo("#book"+i);
@@ -151,31 +148,11 @@ function load_api_books(){
         $('<p></p>').attr({'class':'summary'}).append(document.createTextNode(desc)).appendTo('#description'+i);
         $('<a></a>').attr({'href':link}).append(document.createTextNode("Read More")).appendTo('#description'+i);
         }
-
-// 
-// {/* <div class="Card1">
-//   <div class="photo"></div>
-//   <ul class="details">
-//     <h4>Card List</h4>
-//   </ul>
-//   <div class="description">
-//     <div class="line">
-//       <h1 class="product_name">Card Title</h1>
-//       <h1 class="product_price">€10</h1>
-//     </div>
-//     <p class="summary">An country demesne message it. Bachelor domestic extended doubtful as concerns at. Morning prudent removal an letters by.</p>
-//     <a href="//s.codepen.io/ImagineAlex">Read More</a>
-//   </div>
-// </div> */}
-
     }).fail(function (jqXHR, textStatus, errorThrown) {
         if (console && console.log) {
             console.log("Error name/code: " + textStatus);
         }
     });
-
-    
-
 }
 function initMap() {
     var map = new google.maps.Map(document.getElementById('map'), {
@@ -307,7 +284,6 @@ $(document).ready(function () {
         default:
             getSearchValues();
     };
-
     //Event Listeners to the search input
     $('#shop-search').on('change', function () {
         getSearchValues();

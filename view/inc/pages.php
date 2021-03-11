@@ -16,8 +16,11 @@ if (isset($_GET['page'])){
 		case "shop";
 			include("module/shop/view/".$_GET['page'].".html");
 		break;
+		case "logreg";
+			include("module/logreg/view/".$_GET['page'].".html");
+		break;
         default;
-        include("module/hello/view".$_GET['page'].".html");
+        include("module/hello/view/index.php");
 			break;
     }
 } else {

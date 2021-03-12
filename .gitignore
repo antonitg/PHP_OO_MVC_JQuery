@@ -1,4 +1,5 @@
 /model/*.php
 /model/*.js
+/model/credentials/credentials.php
 *.txt
 *.log

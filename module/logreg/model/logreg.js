@@ -24,10 +24,19 @@ function login() {
       url: 'module/logreg/controller/controller_logreg.php?op=login&username=' + $("#logusername").val() + "&passwd=" + $("#logpasswd").val(),
     }).done(function (jsonSearch) {
       console.log(jsonSearch);
-      alertify.warning(jsonSearch);
+      if (jsonSearch["token"] === undefined){
+        alertify.warning(jsonSearch["message"]);
+        console.log("bad");
+      } else {
+        console.log("well");
+
+        alertify.warning(jsonSearch["message"]);
+        localStorage.setItem("token",jsonSearch["token"]);
+      window.location.href = jsonSearch["page"];
+      }
     }).fail(function (jqXHR, textStatus, errorThrown) {
       alertify.error('That username dont exist, you can register now or log in with an existent account.');
-      console.log(textStatus + " i ademes " + errorThrown + " i per si fa falta " + jqXHR);
+      // console.log(textStatus + " i ademes " + errorThrown + " i per si fa falta " + jqXHR);
     });
   }
 }

@@ -1,66 +1,67 @@
 function register() {
-    if (registervalidate()) {
-        $.ajax({
-            type: 'GET',
-            dataType: 'JSON',
-            url: 'module/logreg/controller/controller_logreg.php?op=register&fullname='+$("#regfullname").val()+"&username="+$("#regusername").val()+"&email="+$("#regemail").val()+"&passwd="+$("#regpasswd").val(),
-        }).done(function (jsonSearch) {
-            console.log(jsonSearch);
-            alertify.warning(jsonSearch);
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            alertify.error('Something went wrong in the registration. Try again!');
-        });
-    }
+  if (registervalidate()) {
+    $.ajax({
+      type: 'GET',
+      // dataType: 'JSON',
+      url: 'module/logreg/controller/controller_logreg.php?op=register&fullname=' + $("#regfullname").val() + "&username=" + $("#regusername").val() + "&email=" + $("#regemail").val() + "&passwd=" + $("#regpasswd").val(),
+    }).done(function (jsonSearch) {
+      console.log(jsonSearch);
+      alertify.warning(jsonSearch);
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      alertify.error('Something went wrong in the registration. Try again!');
+    });
+  }
 
 }
 function registervalidate() {
-    return true;
+  return true;
 }
 function login() {
   if (loginvalidate()) {
-      $.ajax({
-          type: 'GET',
-          dataType: 'JSON',
-          url: 'module/logreg/controller/controller_logreg.php?op=register&fullname='+$("#regfullname").val()+"&username="+$("#regusername").val()+"&email="+$("#regemail").val()+"&passwd="+$("#regpasswd").val(),
-      }).done(function (jsonSearch) {
-          console.log(jsonSearch);
-          alertify.warning(jsonSearch);
-      }).fail(function (jqXHR, textStatus, errorThrown) {
-          alertify.error('Something went wrong in the login. Try again!');
-      });
+    $.ajax({
+      type: 'GET',
+      dataType: 'JSON',
+      url: 'module/logreg/controller/controller_logreg.php?op=login&username=' + $("#logusername").val() + "&passwd=" + $("#logpasswd").val(),
+    }).done(function (jsonSearch) {
+      console.log(jsonSearch);
+      alertify.warning(jsonSearch);
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      alertify.error('That username dont exist, you can register now or log in with an existent account.');
+      console.log(textStatus + " i ademes " + errorThrown + " i per si fa falta " + jqXHR);
+    });
   }
 }
 function loginvalidate() {
   return true;
 }
 
-$(document).on("keyup blur focus","input, textarea", function (e) {
-// $(".form").find("input, textarea").on("keyup blur focus", function (e) {
-    var $this = $(this),
-      label = $this.prev("label");
+$(document).on("keyup blur focus", "input, textarea", function (e) {
+  // $(".form").find("input, textarea").on("keyup blur focus", function (e) {
+  var $this = $(this),
+    label = $this.prev("label");
 
-    if (e.type === "keyup") {
-      if ($this.val() === "") {
-        label.removeClass("active highlight");
-      } else {
-        label.addClass("active highlight");
-      }
-    } else if (e.type === "blur") {
-      if ($this.val() === "") {
-        label.removeClass("active highlight");
-      } else {
-        label.removeClass("highlight");
-      }
-    } else if (e.type === "focus") {
-      if ($this.val() === "") {
-        label.removeClass("highlight");
-      } else if ($this.val() !== "") {
-        label.addClass("highlight");
-      }
+  if (e.type === "keyup") {
+    if ($this.val() === "") {
+      label.removeClass("active highlight");
+    } else {
+      label.addClass("active highlight");
     }
-  });
-  $(document).on("click", ".tab a", function (e) {
-   
+  } else if (e.type === "blur") {
+    if ($this.val() === "") {
+      label.removeClass("active highlight");
+    } else {
+      label.removeClass("highlight");
+    }
+  } else if (e.type === "focus") {
+    if ($this.val() === "") {
+      label.removeClass("highlight");
+    } else if ($this.val() !== "") {
+      label.addClass("highlight");
+    }
+  }
+});
+$(document).on("click", ".tab a", function (e) {
+
 
   e.preventDefault();
   $(this).parent().addClass("active");
@@ -73,25 +74,14 @@ $(document).on("keyup blur focus","input, textarea", function (e) {
   $(target).fadeIn(600);
 });
 $(document).ready(function () {
-    // $(document).on("change", ".select-condition-search", function () {
-    //     load_brands();
-    // });
-    // $(document).on("click", ".autocomplete-item", function () {
-    //     // alert(this.getAttribute("id"));
-    //     $(".search-input").val(this.getAttribute("id"));
-    //     // $(".search-input").append(document.createTextNode(this.getAttribute("id")));
-    // });
-    // $("body").click(function() {
-    //     $("#autocomplete-containter").empty();
-    // });
-    $(document).on("keyup", ".formlog", function (tecla) {
-        if (tecla.keyCode == 13) {
-            login();
-        }
-    });
-    $(document).on("keyup", ".formreg", function (tecla) {
-        if (tecla.keyCode == 13) {
-            register();
-        }
-    });
+  $(document).on("keyup", ".formlog", function (tecla) {
+    if (tecla.keyCode == 13) {
+      login();
+    }
+  });
+  $(document).on("keyup", ".formreg", function (tecla) {
+    if (tecla.keyCode == 13) {
+      register();
+    }
+  });
 });

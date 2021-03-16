@@ -16,6 +16,11 @@ function register() {
 function registervalidate() {
   return true;
 }
+function logout() {
+  localStorage.removeItem("token");
+  window.location.href = "index.php?page=logreg"
+  alertify.warning("Your session has expired, login again");
+}
 function login() {
   if (loginvalidate()) {
     $.ajax({
@@ -23,9 +28,9 @@ function login() {
       dataType: 'JSON',
       url: 'module/logreg/controller/controller_logreg.php?op=login&username=' + $("#logusername").val() + "&passwd=" + $("#logpasswd").val(),
     }).done(function (jsonSearch) {
-      console.log(jsonSearch);
+      // console.log(jsonSearch);
       if (jsonSearch["token"] === undefined){
-        alertify.warning(jsonSearch["message"]);
+        alertify.warning(jsonSearch);
         console.log("bad");
       } else {
         console.log("well");

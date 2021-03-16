@@ -1,6 +1,7 @@
 <?php
 $path = $_SERVER['DOCUMENT_ROOT'] . '/cars/FW_PHP_OO_MVC_JQuery/';
 include($path . "model/connect.php");
+include($path . "general/middleware/middleware.php");
 require_once $path."/general/classes/JWT.php";
 
 class DAOLogreg
@@ -10,8 +11,6 @@ class DAOLogreg
         $pwd_hashed = password_hash($pwd_peppered, PASSWORD_DEFAULT);
         $grav_url = "https://www.gravatar.com/avatar/".md5( strtolower( trim( $email ) ) );
         $conexion = connect::con();
-        // $sql = "INSERT INTO `users` (`fullname`, `username`, `email`, `passwd`, `avatar`) VALUES ('{$fullname}', '{$username}', '{$email}', '{$pwd_hashed}'. '{$grav_url}')";
-
         $sql = "INSERT INTO `users` (`fullname`, `username`, `email`, `passwd`, `avatar`) VALUES ('{$fullname}', '{$username}', '{$email}', '{$pwd_hashed}', '{$grav_url}')";
         $res = mysqli_query($conexion, $sql);
         return $res;
@@ -23,20 +22,14 @@ class DAOLogreg
         $res = mysqli_query($conexion, $sql);
         $result = $res->fetch_assoc();
         if(password_verify($pwd_peppered, $result["passwd"])){
-            /////////////////////////// yomogan ////////////////////////////////////////
-            //iat: Tiempo que inició el token
-            //exp: Tiempo que expirará el token (+1 hora)
-            //name: info user
             $header = '{"typ":"JWT", "alg":"HS256"}';
-            $payload = "{
-                'iat':time(), 
-                'exp':time() + (60*60),
-                'name':'{$username}'
-            }";
+            $iat=time();
+            $exp=time() + 3600;
+            $payload = '{"iat":"'.$iat.'","exp":"'.$exp.'","name":"'.$username.'"}';
             
             $JWT = new JWT;
             $token = $JWT->encode($header, $payload, $secret); 
-
+            // $token = tkencode($secret,$username);
             // return $token;
             $total = array("message"=>'Succefully loged in!', "token"=>$token, "page"=>'index.php');
             // return "{

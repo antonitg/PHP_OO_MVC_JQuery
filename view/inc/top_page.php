@@ -25,6 +25,9 @@
         <script type="text/javascript" src="module/hello/view/hello.js"></script>
         <script type="text/javascript" src="model/credentials.js"></script>
         <script type="text/javascript" src="module/logreg/model/logreg.js"></script>
+        <script type="text/javascript" src="general/middleware/middleware.js"></script>
+        <script type="text/javascript" src="general/utils/utils.js"></script>
+
         <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
         </head>
     <body>

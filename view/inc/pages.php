@@ -19,6 +19,9 @@ if (isset($_GET['page'])){
 		case "logreg";
 			include("module/logreg/view/".$_GET['page'].".html");
 		break;
+		case "profile";
+		include("module/profile/view/".$_GET['page'].".html");
+	break;
         default;
         include("module/hello/view/index.php");
 			break;

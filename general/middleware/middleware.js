@@ -19,6 +19,8 @@ function tkdecode(datavalue) {
         }
       }).fail(function (jqXHR, textStatus, errorThrown) {
         console.log("Error");
+        // window.location.href = "index.php?page=logreg";
+
     });
     tkchecktime(jsonSearch["iat"]);
     return stringfinal;
@@ -26,6 +28,7 @@ function tkdecode(datavalue) {
 
 function tkchecktime(timeexp) {
     if (Math.floor(Date.now() / 1000) > timeexp) {
-        logout();
+        // logout();
+        console.log("logout per temps");
     }
 }

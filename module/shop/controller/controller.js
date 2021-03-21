@@ -7,6 +7,7 @@ function load_content(url) {
         dataType: 'JSON',
         url: 'module/shop/controller/controller_shop.php?op=filter&' + url,
     }).done(function (jsonSearch) {
+        console.log(jsonSearch);
         $('#result-content').empty();
         if (Object.keys(jsonSearch).length == 1) {
             details(jsonSearch[0]["registration"]);
@@ -24,6 +25,12 @@ function load_content(url) {
                     $('<p></p>').attr({ 'class': 'card-text' }).append(document.createTextNode("Upgrades: " + jsonSearch[i]['upgrades'])).appendTo('#card-body_' + reg);
                     $('<p></p>').attr({ 'class': 'card-text' }).append(document.createTextNode("Price: " + jsonSearch[i]['price'] + " €")).appendTo('#card-body_' + reg);
                     $('<a></a>').attr({ 'class': 'btn btn-primary btn-details', 'id': `${reg}` }).append(document.createTextNode("Buy")).appendTo('#card-body_' + reg);
+                    if (jsonSearch[i]['registrationfav'] != null) {
+                        $('<i></i>').attr({'class':'fas fa-heart unfav','id': `${reg}`, 'style':'font-size:24px;margin-left:8px;vertical-align: middle; cursor:pointer;'}).appendTo('#card-body_' + reg);
+                    } else {
+                        $('<i></i>').attr({'class':'far fa-heart unfav','id': `${reg}`, 'style':'font-size:24px;margin-left:8px;vertical-align: middle; cursor:pointer;'}).appendTo('#card-body_' + reg);
+                    } 
+                    $('<i></i>').attr({'class':'fas fa-shopping-basket', 'style':'font-size:24px;margin-left:8px;vertical-align: middle; cursor:pointer;'}).appendTo('#card-body_' + reg);
                 });
             });
         }
@@ -81,6 +88,7 @@ function load_filters() {
         }
     });
 }
+
 function details(id) {
     $.ajax({
         type: 'GET',
@@ -215,7 +223,7 @@ function getPaginationValues() {
     if (minprice == "") {
         minprice = 100;
     }
-    var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice + "&showing=" + showing + "&page=" + page;
+    var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice + "&showing=" + showing + "&page=" + page +"&user=" + tkdecode("name");
     pagination(url);
 }
 function getSearchValues(page = 1) {
@@ -232,7 +240,7 @@ function getSearchValues(page = 1) {
         minprice = 100;
     }
     // var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice;
-    var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice + "&showing=" + showing + "&page=" + page;
+    var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice + "&showing=" + showing + "&page=" + page+"&user=" + tkdecode("name");
     load_content(url);
 }
 $(document).ready(function () {
@@ -251,27 +259,27 @@ $(document).ready(function () {
         case "search":
             switch (localStorage.getItem("value")) {
                 case "KM0":
-                    var url = "keyword=%&brand=%&condition=New&minprice=100&maxprice=99999999&showing=10&page=1";
+                    var url = "keyword=%&brand=%&condition=New&minprice=100&maxprice=99999999&showing=10&page=1"+"&user=" + tkdecode("name");
                     load_content(url);
                     break;
                 case "Seat":
-                    var url = "keyword=%&brand=Seat&condition=%&minprice=100&maxprice=99999999&showing=10&page=1";
+                    var url = "keyword=%&brand=Seat&condition=%&minprice=100&maxprice=99999999&showing=10&page=1"+"&user=" + tkdecode("name");
                     load_content(url);
                     break;
                 case "Luxury":
-                    var url = "keyword=%&brand=%&condition=%&minprice=200000&maxprice=99999999&showing=10&page=1";
+                    var url = "keyword=%&brand=%&condition=%&minprice=200000&maxprice=99999999&showing=10&page=1"+"&user=" + tkdecode("name");
                     load_content(url);
                     break;
                 case "Preowned":
-                    var url = "keyword=%&brand=%&condition=Used&minprice=100&maxprice=99999999&showing=10&page=1";
+                    var url = "keyword=%&brand=%&condition=Used&minprice=100&maxprice=99999999&showing=10&page=1"+"&user=" + tkdecode("name");
                     load_content(url);
                     break;
                 case "BMW":
-                    var url = "keyword=%&brand=BMW&condition=%&minprice=100&maxprice=99999999&showing=10&page=1";
+                    var url = "keyword=%&brand=BMW&condition=%&minprice=100&maxprice=99999999&showing=10&page=1"+"&user=" + tkdecode("name");
                     load_content(url);
                     break;
                 case "global":
-                    var url = "keyword="+localStorage.getItem("keyword")+"&brand="+localStorage.getItem('brand')+"&condition="+localStorage.getItem('condition')+"&minprice=100&maxprice=99999999&showing=10&page=1";
+                    var url = "keyword="+localStorage.getItem("keyword")+"&brand="+localStorage.getItem('brand')+"&condition="+localStorage.getItem('condition')+"&minprice=100&maxprice=99999999&showing=10&page=1"+"&user=" + tkdecode("name");
                     load_content(url);
                     break;
                 default:
@@ -284,7 +292,45 @@ $(document).ready(function () {
         default:
             getSearchValues();
     };
+    function fav(id,action){
+        if (action == "fav"){
+            $.ajax({
+                type: 'GET',
+                dataType: 'JSON',
+                url: 'module/shop/controller/controller_shop.php?op=fav&id=' + id + "&user="+tkdecode("name"),
+            }).done(function (jsonCar) {
+                // console.log(jsonCar);
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                if (console && console.log) {
+                    console.log("Error name/code: " + textStatus);
+                }
+            });
+        }  else if (action == "unfav") {
+            $.ajax({
+                type: 'GET',
+                dataType: 'JSON',
+                url: 'module/shop/controller/controller_shop.php?op=unfav&id=' + id + "&user="+tkdecode("name"),
+            }).done(function (jsonCar) {
+                // console.log(jsonCar);
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                if (console && console.log) {
+                    console.log("Error name/code: " + textStatus);
+                }
+            });
+        }
+    }
     //Event Listeners to the search input
+    $(document).on("click", ".unfav", function () {
+        fav($(this).attr('id'),'fav'); 
+        this.removeAttribute('class');
+        this.setAttribute('class', 'fas fa-heart fav');
+
+    });
+    $(document).on("click", ".fav", function () {
+        fav($(this).attr('id'),'unfav'); 
+        this.removeAttribute('class');
+        this.setAttribute('class', 'far fa-heart unfav');
+    });
     $('#shop-search').on('change', function () {
         getSearchValues();
     });

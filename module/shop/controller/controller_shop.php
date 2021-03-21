@@ -41,7 +41,7 @@ switch ($_GET['op']) {
     case 'filter';
         try {
             $daoshop = new DAOShop();
-            $rdo = $daoshop->filter($_GET['keyword'], $_GET['brand'], $_GET['condition'], $_GET['minprice'], $_GET['maxprice'], $_GET['showing'], $_GET['page']);
+            $rdo = $daoshop->filter($_GET['keyword'], $_GET['brand'], $_GET['condition'], $_GET['minprice'], $_GET['maxprice'], $_GET['showing'], $_GET['page'],$_GET['user']);
         } catch (Exception $e) {
             echo json_encode("no arriba al daouser");
             exit;
@@ -114,6 +114,38 @@ switch ($_GET['op']) {
         try {
             $daoshop = new DAOShop();
             $rdo = $daoshop->getmap($_GET['lat'], $_GET['lon']);
+        } catch (Exception $e) {
+            echo json_encode("no arriba al daouser");
+            exit;
+        }
+        if (!$rdo) {
+            echo json_encode("entra al daouser pero acaba mal");
+            exit;
+        } else {
+            echo json_encode($rdo);
+            exit;
+        }
+        break;
+    case 'fav';
+        try {
+            $daoshop = new DAOShop();
+            $rdo = $daoshop->fav($_GET['user'], $_GET['id']);
+        } catch (Exception $e) {
+            echo json_encode("no arriba al daouser");
+            exit;
+        }
+        if (!$rdo) {
+            echo json_encode("entra al daouser pero acaba mal");
+            exit;
+        } else {
+            echo json_encode($rdo);
+            exit;
+        }
+        break;
+        case 'unfav';
+        try {
+            $daoshop = new DAOShop();
+            $rdo = $daoshop->unfav($_GET['user'], $_GET['id']);
         } catch (Exception $e) {
             echo json_encode("no arriba al daouser");
             exit;

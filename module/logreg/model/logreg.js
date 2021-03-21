@@ -28,20 +28,17 @@ function login() {
       dataType: 'JSON',
       url: 'module/logreg/controller/controller_logreg.php?op=login&username=' + $("#logusername").val() + "&passwd=" + $("#logpasswd").val(),
     }).done(function (jsonSearch) {
-      // console.log(jsonSearch);
       if (jsonSearch["token"] === undefined){
         alertify.warning(jsonSearch);
-        console.log("bad");
+        // console.log("bad");
       } else {
-        console.log("well");
-
+        // console.log("well");
         alertify.warning(jsonSearch["message"]);
         localStorage.setItem("token",jsonSearch["token"]);
       window.location.href = jsonSearch["page"];
       }
     }).fail(function (jqXHR, textStatus, errorThrown) {
       alertify.error('That username dont exist, you can register now or log in with an existent account.');
-      // console.log(textStatus + " i ademes " + errorThrown + " i per si fa falta " + jqXHR);
     });
   }
 }
@@ -88,8 +85,15 @@ $(document).on("click", ".tab a", function (e) {
   $(target).fadeIn(600);
 });
 $(document).ready(function () {
+  $(document).on("click", "#logbutton", function () {
+      login();
+  });
+  $(document).on("click", "#regbutton", function () {
+    register();
+});
   $(document).on("keyup", ".formlog", function (tecla) {
     if (tecla.keyCode == 13) {
+      alert("???");
       login();
     }
   });

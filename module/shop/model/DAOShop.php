@@ -32,7 +32,22 @@ class DAOShop
         $result = $res->fetch_assoc();
         return $result;
     }
-
+    function fav($user,$registration) {
+        $sql = "INSERT INTO `favs`(`userfav`, `registrationfav`) VALUES ('{$user}','{$registration}')";
+        $conexion = connect::con();
+        mysqli_query($conexion, $sql);
+        // return $sql;
+        connect::close($conexion);
+    }
+    function unfav($user,$registration) {
+        $sql = "DELETE FROM favs
+        WHERE registrationfav = '{$registration}' AND userfav = '{$user}'";
+        $conexion = connect::con();
+        mysqli_query($conexion, $sql);
+        // return $sql;
+        connect::close($conexion);
+    }
+    
     function getmap($lat, $lon)
     {
         $sql = "SELECT price,carcondition,brand,model,src,lat,lon,registration,ABS(ABS({$lat} - lat)) + ABS(ABS({$lon} - lon)) AS diftotal from cars c
@@ -67,7 +82,7 @@ class DAOShop
         connect::close($conexion);
     }
 
-    function filter($keyword, $brand, $condition, $minprice, $maxprice,$showing,$page)
+    function filter($keyword, $brand, $condition, $minprice, $maxprice,$showing,$page,$user)
     {
         if ($minprice == "null") {
             $minprice = 100;
@@ -78,10 +93,11 @@ class DAOShop
 
         $from = $showing*($page-1);
         
-        $sql = "SELECT * FROM `cars`
-        WHERE `brand` LIKE '{$brand}' AND `carcondition` LIKE '{$condition}' AND `model` LIKE '%{$keyword}%' AND `price` BETWEEN '{$minprice}' AND '{$maxprice}' 
-        ORDER BY views desc
-        LIMIT {$from},{$showing}";
+        // $sql = "SELECT * FROM `cars`
+        // WHERE `brand` LIKE '{$brand}' AND `carcondition` LIKE '{$condition}' AND `model` LIKE '%{$keyword}%' AND `price` BETWEEN '{$minprice}' AND '{$maxprice}' 
+        // ORDER BY views desc
+        // LIMIT {$from},{$showing}";
+        $sql = "SELECT c.*,v.registrationfav FROM `cars` c LEFT JOIN `favs` v ON v.userfav = '{$user}' AND v.registrationfav=c.registration WHERE `brand` LIKE '{$brand}' AND `carcondition` LIKE '{$condition}' AND `model` LIKE '%{$keyword}%' AND `price` BETWEEN '{$minprice}' AND '{$maxprice}' ORDER BY views desc LIMIT {$from},{$showing}";
         // $sql = "SELECT * FROM `cars`
         // WHERE `brand` LIKE '{$brand}' AND `carcondition` LIKE '{$condition}' AND `category` LIKE '%{$keyword}%' AND `price` BETWEEN '{$minprice}' AND '{$maxprice}'";
         $conexion = connect::con();
@@ -90,7 +106,7 @@ class DAOShop
         while ($row = $res->fetch_array(MYSQLI_ASSOC)) {
             $resArray[] = $row;
         }
-
+        // return $sql;
         return $resArray;
     }
     function pagination($keyword, $brand, $condition, $minprice, $maxprice,$showing,$page)

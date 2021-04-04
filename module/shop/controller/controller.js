@@ -7,7 +7,7 @@ function load_content(url) {
         dataType: 'JSON',
         url: 'module/shop/controller/controller_shop.php?op=filter&' + url,
     }).done(function (jsonSearch) {
-        console.log(jsonSearch);
+        // console.log(jsonSearch);
         $('#result-content').empty();
         if (Object.keys(jsonSearch).length == 1) {
             details(jsonSearch[0]["registration"]);
@@ -26,11 +26,11 @@ function load_content(url) {
                     $('<p></p>').attr({ 'class': 'card-text' }).append(document.createTextNode("Price: " + jsonSearch[i]['price'] + " €")).appendTo('#card-body_' + reg);
                     $('<a></a>').attr({ 'class': 'btn btn-primary btn-details', 'id': `${reg}` }).append(document.createTextNode("Buy")).appendTo('#card-body_' + reg);
                     if (jsonSearch[i]['registrationfav'] != null) {
-                        $('<i></i>').attr({'class':'fas fa-heart unfav','id': `${reg}`, 'style':'font-size:24px;margin-left:8px;vertical-align: middle; cursor:pointer;'}).appendTo('#card-body_' + reg);
+                        $('<i></i>').attr({ 'class': 'fas fa-heart unfav', 'id': `${reg}`, 'style': 'font-size:24px;margin-left:8px;vertical-align: middle; cursor:pointer;' }).appendTo('#card-body_' + reg);
                     } else {
-                        $('<i></i>').attr({'class':'far fa-heart unfav','id': `${reg}`, 'style':'font-size:24px;margin-left:8px;vertical-align: middle; cursor:pointer;'}).appendTo('#card-body_' + reg);
-                    } 
-                    $('<i></i>').attr({'class':'fas fa-shopping-basket', 'style':'font-size:24px;margin-left:8px;vertical-align: middle; cursor:pointer;'}).appendTo('#card-body_' + reg);
+                        $('<i></i>').attr({ 'class': 'far fa-heart unfav', 'id': `${reg}`, 'style': 'font-size:24px;margin-left:8px;vertical-align: middle; cursor:pointer;' }).appendTo('#card-body_' + reg);
+                    }
+                    $('<i></i>').attr({ 'class': 'fas fa-shopping-basket item-addcart', 'id': `${reg}`, 'style': 'font-size:24px;margin-left:8px;vertical-align: middle; cursor:pointer;' }).appendTo('#card-body_' + reg);
                 });
             });
         }
@@ -112,8 +112,8 @@ function details(id) {
                 }
             }
         });
-        $('<div></div>').attr({'id': 'books_releated' }).appendTo('#result-content');
-        $('<button></button>').attr({'id': 'showmore','class':'btn btn-info','style':'margin-left: 39%; margin-right: 39%;'}).append(document.createTextNode("More")).appendTo('#result-content');
+        $('<div></div>').attr({ 'id': 'books_releated' }).appendTo('#result-content');
+        $('<button></button>').attr({ 'id': 'showmore', 'class': 'btn btn-info', 'style': 'margin-left: 39%; margin-right: 39%;' }).append(document.createTextNode("More")).appendTo('#result-content');
         load_api_books();
     }).fail(function (jqXHR, textStatus, errorThrown) {
         if (console && console.log) {
@@ -121,7 +121,7 @@ function details(id) {
         }
     });
 }
-function load_api_books(){
+function load_api_books() {
     var offset = $("#books_releated")[0].childElementCount;
     var limit = 3;
 
@@ -130,31 +130,31 @@ function load_api_books(){
         dataType: 'JSON',
         url: 'https://www.googleapis.com/books/v1/volumes?q=car&maxResults=40&orderBy=newest',
     }).done(function (jsonCar) {
-        console.log(offset,limit);
+        console.log(offset, limit);
         console.log(jsonCar);
 
-        for (i = offset;i<offset+limit;i++) {
+        for (i = offset; i < offset + limit; i++) {
             console.log(i);
             try {
                 var foto = jsonCar.items[i].volumeInfo.imageLinks.thumbnail;
             }
-              catch(err) {
-                var foto = "http://books.google.com/books/content?id=cr4IyD5l1NQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"; 
+            catch (err) {
+                var foto = "http://books.google.com/books/content?id=cr4IyD5l1NQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api";
             }
-        var title = jsonCar.items[i].volumeInfo.title;
-        var desc = jsonCar.items[i].volumeInfo.description;
-        var link = jsonCar.items[i].volumeInfo.previewLink;
-        var pags = jsonCar.items[i].volumeInfo.pageCount;
-        $('<div></div>').attr({'class':'Card1','id':'book'+i}).appendTo("#books_releated");
-        $('<div></div>').attr({'class':'photo','style':'background-image:url("'+foto+'");'}).appendTo("#book"+i);
-        $('<ul></ul>').attr({'class':'details','id':'ulbook'+i}).appendTo("#book"+i);
-        $('<h4></h4>').append(document.createTextNode(title)).appendTo('#ulbook'+i);
-        $('<div></div>').attr({'class':'description','id':'description'+i}).appendTo('#book'+i);
-        $('<div></div>').attr({'class':'line','id':'line'+i}).appendTo('#description'+i);
-        $('<h1></h1>').attr({'class':'product_name'}).append(document.createTextNode(title)).appendTo('#line'+i);
-        $('<h1></h1>').attr({'class':'product_price'}).append(document.createTextNode(pags+" Pags")).appendTo('#line'+i);
-        $('<p></p>').attr({'class':'summary'}).append(document.createTextNode(desc)).appendTo('#description'+i);
-        $('<a></a>').attr({'href':link}).append(document.createTextNode("Read More")).appendTo('#description'+i);
+            var title = jsonCar.items[i].volumeInfo.title;
+            var desc = jsonCar.items[i].volumeInfo.description;
+            var link = jsonCar.items[i].volumeInfo.previewLink;
+            var pags = jsonCar.items[i].volumeInfo.pageCount;
+            $('<div></div>').attr({ 'class': 'Card1', 'id': 'book' + i }).appendTo("#books_releated");
+            $('<div></div>').attr({ 'class': 'photo', 'style': 'background-image:url("' + foto + '");' }).appendTo("#book" + i);
+            $('<ul></ul>').attr({ 'class': 'details', 'id': 'ulbook' + i }).appendTo("#book" + i);
+            $('<h4></h4>').append(document.createTextNode(title)).appendTo('#ulbook' + i);
+            $('<div></div>').attr({ 'class': 'description', 'id': 'description' + i }).appendTo('#book' + i);
+            $('<div></div>').attr({ 'class': 'line', 'id': 'line' + i }).appendTo('#description' + i);
+            $('<h1></h1>').attr({ 'class': 'product_name' }).append(document.createTextNode(title)).appendTo('#line' + i);
+            $('<h1></h1>').attr({ 'class': 'product_price' }).append(document.createTextNode(pags + " Pags")).appendTo('#line' + i);
+            $('<p></p>').attr({ 'class': 'summary' }).append(document.createTextNode(desc)).appendTo('#description' + i);
+            $('<a></a>').attr({ 'href': link }).append(document.createTextNode("Read More")).appendTo('#description' + i);
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
         if (console && console.log) {
@@ -223,7 +223,7 @@ function getPaginationValues() {
     if (minprice == "") {
         minprice = 100;
     }
-    var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice + "&showing=" + showing + "&page=" + page +"&user=" + tkdecode("name");
+    var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice + "&showing=" + showing + "&page=" + page + "&user=" + localStorage.getItem("token");
     pagination(url);
 }
 function getSearchValues(page = 1) {
@@ -240,10 +240,157 @@ function getSearchValues(page = 1) {
         minprice = 100;
     }
     // var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice;
-    var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice + "&showing=" + showing + "&page=" + page+"&user=" + tkdecode("name");
+    var url = "keyword=" + keyword + "&brand=" + brand + "&condition=" + condition + "&minprice=" + minprice + "&maxprice=" + maxprice + "&showing=" + showing + "&page=" + page + "&user=" + localStorage.getItem("token");
     load_content(url);
 }
+function rmcart(id) {
+    $.ajax({
+        type: 'GET',
+        // dataType: 'JSON',
+        url: 'module/shop/controller/controller_shop.php?op=rmcart&registration=' + id + "&token=" + localStorage.getItem("token"),
+    }).done(function (jsonCar) {
+        console.log(jsonCar);
+        loadcart();
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (console && console.log) {
+            console.log("Error name/code: " + textStatus);
+        }
+    });
+}
+function addcart(id) {
+    $.ajax({
+        type: 'GET',
+        // dataType: 'JSON',
+        url: 'module/shop/controller/controller_shop.php?op=addcart&registration=' + id + '&token=' + localStorage.getItem("token"),
+    }).done(function (jsonCar) {
+        loadcart();
+        console.log(jsonCar);
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (console && console.log) {
+            console.log("Error name/code: " + textStatus);
+        }
+    });
+}
+function loadcart() {
+    $('.cartul').remove();
+    $('.price').empty();
+    $('#tbodymodalcart').empty();
+
+    $.ajax({
+        type: 'GET',
+        dataType: 'JSON',
+        url: 'module/shop/controller/controller_shop.php?op=loadcart&token=' + localStorage.getItem("token"),
+    }).done(function (jsonCar) {
+        console.log(jsonCar);
+        // Sidebar Cart
+        $('<ul></ul>').attr({ 'class': 'list-group cartul' }).appendTo(".sidebar");
+        $('<li></li>').attr({ 'class': 'list-group-item active', 'id': 'test' }).append(document.createTextNode("Cart")).appendTo(".cartul");
+        $('<span></span>').attr({ 'class': 'badge badge-primary badge-pill', 'style': 'background-color:darkblue;margin-left:8px;' }).append(document.createTextNode(Object.keys(jsonCar).length)).appendTo("#test");
+
+        totalprice = 0;
+        $.each(jsonCar, function (i, item) {
+            console.log(totalprice);
+            totalprice = totalprice + parseInt(jsonCar[i]["cartprice"]);
+            $('<li></li>').attr({ 'class': 'list-group-item', 'id': jsonCar[i]["registration"], 'style': 'border: 3px solid #007bff;border-top: 0px;border-bottom: 0px;' }).append('<img src="' + jsonCar[i]["src"] + '" style="width:35%;height:35%;margin-right:8px;">', document.createTextNode(jsonCar[i]["brand"] + " " + jsonCar[i]["model"]), '<i class="fas fa-cart-arrow-down rmcart" id="' + jsonCar[i]["registration"] + '" style="margin-left:8px;font-size:22px;cursor:pointer;"></i>').appendTo(".cartul");
+            // Modal Cart
+            $('<tr></tr>').attr({ 'id': jsonCar[i]["registration"] + "modaltr" }).appendTo("#tbodymodalcart");
+            $('<td></td>').attr({ 'id': jsonCar[i]["registration"] + "modaltdphoto", 'class': 'w-25' }).append($("<img>").attr({ 'src': jsonCar[i]["src"], 'class': 'img-fluid img-thumbnail' })).appendTo("#" + jsonCar[i]["registration"] + "modaltr");
+            $('<td></td>').append(document.createTextNode(jsonCar[i]["brand"] + " " + jsonCar[i]["model"] + " - " + jsonCar[i]["carcondition"])).appendTo("#" + jsonCar[i]["registration"] + "modaltr");
+            // if (jsonCar[i]["insurance"] === 1) {
+            //     finalprice = (jsonCar[i]["price"]+jsonCar[i]["price"]/10);
+            $('<td></td>').append(document.createTextNode(jsonCar[i]["price"])).appendTo("#" + jsonCar[i]["registration"] + "modaltr");
+            // } else {ç
+            if (jsonCar[i]["insurance"] == 1) {
+                $('<td></td>').append($('<button></button>').attr({ 'type': 'button', 'class': 'btn btn-danger rminsurance', 'id': jsonCar[i]["registration"] }).append(document.createTextNode('Remove Insurance -10%'))).appendTo("#" + jsonCar[i]["registration"] + "modaltr");
+            } else {
+                $('<td></td>').append($('<button></button>').attr({ 'type': 'button', 'class': 'btn btn-success addinsurance', 'id': jsonCar[i]["registration"] }).append(document.createTextNode('Add Insurance +10%'))).appendTo("#" + jsonCar[i]["registration"] + "modaltr");
+            }
+            $('<td></td>').append(document.createTextNode(jsonCar[i]["cartprice"])).appendTo("#" + jsonCar[i]["registration"] + "modaltr");
+            // }
+            $('<td></td>').attr({ 'id': jsonCar[i]["registration"] + 'remove' }).appendTo("#" + jsonCar[i]["registration"] + "modaltr");
+            $('<a></a>').attr({ 'class': 'btn btn-danger btn-sm rmcart', 'id': jsonCar[i]["registration"] }).append($('<i></i>').attr({ 'class': 'fa fa-times' })).appendTo('#' + jsonCar[i]["registration"] + 'remove');
+        });
+        $('<li></li>').attr({ 'class': 'list-group-item active', 'id': 'test' }).append($('<button></button>').attr({ 'type': 'button', 'class': 'btn btn-info firstcheckout', 'style': 'width:100%;height:100%;' }).append(document.createTextNode('Checkout'))).appendTo(".cartul");
+        $('.price').append(document.createTextNode(totalprice + "$"));
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (console && console.log) {
+            console.log("Error name/code: " + textStatus + jsonCar);
+        }
+    });
+}
+function addinsurance(id) {
+    $.ajax({
+        type: 'GET',
+        // dataType: 'JSON',
+        url: 'module/shop/controller/controller_shop.php?op=addinsurance&id=' + id + "&token=" + localStorage.getItem("token"),
+    }).done(function (jsonCar) {
+        console.log(jsonCar);
+
+        loadcart();
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (console && console.log) {
+            console.log("Error name/code: " + textStatus);
+        }
+    });
+}
+function rminsurance(id) {
+    $.ajax({
+        type: 'GET',
+        // dataType: 'JSON',
+        url: 'module/shop/controller/controller_shop.php?op=rminsurance&id=' + id + "&token=" + localStorage.getItem("token"),
+    }).done(function (jsonCar) {
+        console.log(jsonCar);
+        loadcart();
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (console && console.log) {
+            console.log("Error name/code: " + textStatus);
+        }
+    });
+}
+function finalcheckout() {
+    $.ajax({
+        type: 'GET',
+        // dataType: 'JSON',
+        url: 'module/shop/controller/controller_shop.php?op=checkout&token=' + localStorage.getItem("token"),
+    }).done(function (jsonCar) {
+        console.log(jsonCar);
+        loadcart();
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (console && console.log) {
+            console.log("Error name/code: " + textStatus);
+        }
+    });
+}
+
+function fav(id, action) {
+    if (action == "fav") {
+        $.ajax({
+            type: 'GET',
+            // dataType: 'JSON',
+            url: 'module/shop/controller/controller_shop.php?op=fav&id=' + id + "&user=" + localStorage.getItem("token"),
+        }).done(function (jsonCar) {
+            console.log(jsonCar);
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            if (console && console.log) {
+                console.log("Error name/code: " + textStatus);
+            }
+        });
+    } else if (action == "unfav") {
+        $.ajax({
+            type: 'GET',
+            dataType: 'JSON',
+            url: 'module/shop/controller/controller_shop.php?op=unfav&id=' + id + "&user=" + localStorage.getItem("token"),
+        }).done(function (jsonCar) {
+            // console.log(jsonCar);
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            if (console && console.log) {
+                console.log("Error name/code: " + textStatus);
+            }
+        });
+    }
+}
 $(document).ready(function () {
+    loadcart();
     load_filters();
     if (document.getElementById("map") != null) {
         var script = document.createElement('script');
@@ -259,27 +406,27 @@ $(document).ready(function () {
         case "search":
             switch (localStorage.getItem("value")) {
                 case "KM0":
-                    var url = "keyword=%&brand=%&condition=New&minprice=100&maxprice=99999999&showing=10&page=1"+"&user=" + tkdecode("name");
+                    var url = "keyword=%&brand=%&condition=New&minprice=100&maxprice=99999999&showing=10&page=1" + "&user=" + localStorage.getItem("token");
                     load_content(url);
                     break;
                 case "Seat":
-                    var url = "keyword=%&brand=Seat&condition=%&minprice=100&maxprice=99999999&showing=10&page=1"+"&user=" + tkdecode("name");
+                    var url = "keyword=%&brand=Seat&condition=%&minprice=100&maxprice=99999999&showing=10&page=1" + "&user=" + localStorage.getItem("token");
                     load_content(url);
                     break;
                 case "Luxury":
-                    var url = "keyword=%&brand=%&condition=%&minprice=200000&maxprice=99999999&showing=10&page=1"+"&user=" + tkdecode("name");
+                    var url = "keyword=%&brand=%&condition=%&minprice=200000&maxprice=99999999&showing=10&page=1" + "&user=" + localStorage.getItem("token");
                     load_content(url);
                     break;
                 case "Preowned":
-                    var url = "keyword=%&brand=%&condition=Used&minprice=100&maxprice=99999999&showing=10&page=1"+"&user=" + tkdecode("name");
+                    var url = "keyword=%&brand=%&condition=Used&minprice=100&maxprice=99999999&showing=10&page=1" + "&user=" + localStorage.getItem("token");
                     load_content(url);
                     break;
                 case "BMW":
-                    var url = "keyword=%&brand=BMW&condition=%&minprice=100&maxprice=99999999&showing=10&page=1"+"&user=" + tkdecode("name");
+                    var url = "keyword=%&brand=BMW&condition=%&minprice=100&maxprice=99999999&showing=10&page=1" + "&user=" + localStorage.getItem("token");
                     load_content(url);
                     break;
                 case "global":
-                    var url = "keyword="+localStorage.getItem("keyword")+"&brand="+localStorage.getItem('brand')+"&condition="+localStorage.getItem('condition')+"&minprice=100&maxprice=99999999&showing=10&page=1"+"&user=" + tkdecode("name");
+                    var url = "keyword=" + localStorage.getItem("keyword") + "&brand=" + localStorage.getItem('brand') + "&condition=" + localStorage.getItem('condition') + "&minprice=100&maxprice=99999999&showing=10&page=1" + "&user=" + localStorage.getItem("token");
                     load_content(url);
                     break;
                 default:
@@ -292,45 +439,61 @@ $(document).ready(function () {
         default:
             getSearchValues();
     };
-    function fav(id,action){
-        if (action == "fav"){
-            $.ajax({
-                type: 'GET',
-                dataType: 'JSON',
-                url: 'module/shop/controller/controller_shop.php?op=fav&id=' + id + "&user="+tkdecode("name"),
-            }).done(function (jsonCar) {
-                // console.log(jsonCar);
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-                if (console && console.log) {
-                    console.log("Error name/code: " + textStatus);
-                }
-            });
-        }  else if (action == "unfav") {
-            $.ajax({
-                type: 'GET',
-                dataType: 'JSON',
-                url: 'module/shop/controller/controller_shop.php?op=unfav&id=' + id + "&user="+tkdecode("name"),
-            }).done(function (jsonCar) {
-                // console.log(jsonCar);
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-                if (console && console.log) {
-                    console.log("Error name/code: " + textStatus);
-                }
-            });
-        }
-    }
     //Event Listeners to the search input
+    $(document).on("click", ".rmcart", function () {
+        if (localStorage.getItem("token") == null) {
+            window.location.href = "index.php?page=logreg";
+            alertify.warning("You must be logged in to rate products");
+        } else {
+            rmcart($(this).attr('id'));
+            // this.removeAttribute('class');
+            // this.setAttribute('class', 'fas fa-shopping-basket');
+        }
+    });
+    $(document).on("click", ".item-addcart", function () {
+        if (localStorage.getItem("token") == null) {
+            window.location.href = "index.php?page=logreg";
+            alertify.warning("You must be logged in to rate products");
+        } else {
+            addcart($(this).attr('id'));
+            // this.removeAttribute('class');
+            // this.setAttribute('class', 'fas fa-shopping-basket');
+        }
+    });
     $(document).on("click", ".unfav", function () {
-        fav($(this).attr('id'),'fav'); 
-        this.removeAttribute('class');
-        this.setAttribute('class', 'fas fa-heart fav');
-
+        if (localStorage.getItem("token") == null) {
+            window.location.href = "index.php?page=logreg";
+            alertify.warning("You must be logged in to rate products");
+        } else {
+            fav($(this).attr('id'), 'fav');
+            this.removeAttribute('class');
+            this.setAttribute('class', 'fas fa-heart fav');
+        }
     });
     $(document).on("click", ".fav", function () {
-        fav($(this).attr('id'),'unfav'); 
-        this.removeAttribute('class');
-        this.setAttribute('class', 'far fa-heart unfav');
+        if (localStorage.getItem("token") == null) {
+            window.location.href = "index.php?page=logreg";
+            alertify.warning("You must be logged in to rate products");
+        } else {
+            fav($(this).attr('id'), 'unfav');
+            this.removeAttribute('class');
+            this.setAttribute('class', 'far fa-heart unfav');
+        }
     });
+
+    $(document).on("click", ".firstcheckout", function () {
+        $('#cartModal').modal('show');
+    });
+    $(document).on("click", ".addinsurance", function () {
+        addinsurance($(this).attr('id'));
+    });
+    $(document).on("click", ".rminsurance", function () {
+        rminsurance($(this).attr('id'));
+    });
+    $(document).on("click", "#finalcheckout", function () {
+        finalcheckout();
+    });
+    
     $('#shop-search').on('change', function () {
         getSearchValues();
     });
@@ -342,11 +505,11 @@ $(document).ready(function () {
         details(this.getAttribute("id"));
     });
     $(document).on("click", ".btn-details", function () {
-        details($(this).attr('id')); 
+        details($(this).attr('id'));
     });
     //Event Listener for the car in the map
     $(document).on("click", ".mapsimage", function () {
-        details($(this).attr('id')); 
+        details($(this).attr('id'));
     });
     //Event listener for the pagination 
     $(document).on("click", ".page-link", function () {

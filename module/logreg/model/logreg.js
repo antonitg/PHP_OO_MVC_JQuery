@@ -18,7 +18,7 @@ function registervalidate() {
 }
 function logout() {
   localStorage.removeItem("token");
-  window.location.href = "index.php?page=logreg"
+  window.location.href = "index.php?page=logreg";
   alertify.warning("Your session has expired, login again");
 }
 function login() {
